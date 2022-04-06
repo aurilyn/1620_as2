@@ -56,11 +56,16 @@ function assembleNote (){
   displayNote(note)
   savBtn = document.querySelector('.Save')
   delBtn = document.querySelector('.Delete')
-  savBtn.addEventListener('click', addtitletoNotes)
+  savBtn.addEventListener('click', savedNote)
   delBtn.addEventListener('click', delNote)
 }
 
 function addtoArray(){
+  notes.push({
+    title: getTitle(),
+    noteBody: checkNote(),
+    id: notes.length + 1
+  }) 
 }
 
 function addtitletoNotes(){
@@ -69,18 +74,31 @@ function addtitletoNotes(){
   selectNav.insertAdjacentHTML('afterbegin', getTitle())
 }
 function savedNote(){
-
+    addtitletoNotes()
+    addtoArray()
+    delNote()
 }
+
+
 function checkNote(){
   const text = document.getElementById("noteArea")
-  const noteBody = text.value.split("\n")
+  const noteBody = text.value
   return noteBody
 }
 
 function getTitle(){
   const savedNote = checkNote()
-  const title = savedNote[0]
+  const tempNote = savedNote.split("\n")
+  const title = tempNote[0]
   return title
 }
 
+function initPage(){
+  notes.map(item => item.title)
+  const selectNav = document.querySelector('.notes-list')
+  selectNav.innerHTML = ''
+  selectNav.insertAdjacentHTML('beforebegin', item.title[0]) 
+}
 openText.addEventListener('click', assembleNote)
+notes.map(item => item.title)
+initPage
