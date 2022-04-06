@@ -56,11 +56,21 @@ function assembleNote (){
   displayNote(note)
   savBtn = document.querySelector('.Save')
   delBtn = document.querySelector('.Delete')
-  savBtn.addEventListener('click', )
+  savBtn.addEventListener('click', addtitletoNotes)
   delBtn.addEventListener('click', delNote)
 }
 
+function addtoArray(){
+}
 
+function addtitletoNotes(){
+  const selectNav = document.querySelector('.notes-list')
+  selectNav.innerHTML = ''
+  selectNav.insertAdjacentHTML('afterbegin', getTitle())
+}
+function savedNote(){
+
+}
 function checkNote(){
   const text = document.getElementById("noteArea")
   const noteBody = text.value.split("\n")
@@ -70,6 +80,7 @@ function checkNote(){
 function getTitle(){
   const savedNote = checkNote()
   const title = savedNote[0]
+  return title
 }
 
 openText.addEventListener('click', assembleNote)
