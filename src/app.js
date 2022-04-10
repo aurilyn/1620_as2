@@ -9,17 +9,17 @@ const notes = [
     id: 1 
   }
 ]
-function removeText(){
-  const revert = document.querySelector('.write-note-area')
-  revert.innerHTML = ''
-  revert.insertAdjacentHTML('afterbegin', '')
-}
-
 const template = `
     <textarea id = 'noteArea' rows="40" cols="80">Note</textarea>
     <button class="Save">Save</button>
     <button class="Delete">Delete</button>
   `
+function removeText(){
+  openText.innerHTML = '<i class="fa-solid fa-circle-plus">'
+  const revert = document.querySelector('.write-note-area')
+  revert.innerHTML = ''
+  revert.insertAdjacentHTML('afterbegin', '')
+}
 function addtoNav(){
   const whatever = document.querySelector(".side-note-menu")
   whatever.innerHTML = ''
@@ -39,6 +39,7 @@ function getNote (){
 }
 
 function putNote (){
+  openText.innerHTML = ''
   removeRead()
   displayNote(template)
   savBtn = document.querySelector('.Save')
@@ -48,7 +49,7 @@ function putNote (){
 }
 
 
-function addtitletoNotes(){
+function addtitletoLi(){
   const selectNav = document.querySelector('.notes-list')
   const li = document.createElement("li")
   li.className = 'newNote'
@@ -63,8 +64,8 @@ function addtoArray(){
   if (index > -1){
     textSplit.splice(index, 1);
   }
-  for (const x of textSplit){
-    noteShow += x;
+  for (const item of textSplit){
+    noteShow += item;
     noteShow += "\n";
   }
   notes.push({
@@ -75,33 +76,35 @@ function addtoArray(){
 }
 
 function savedNote(){
-  addtitletoNotes()
+  addtitletoLi()
   addtoArray()
   removeText()
-  lastNoteButton()
+  clickableNote()
 }
 
 function getTitle(){
   const savedNote = getNote()
-  const tempNote = savedNote.split("\n")
-  const title = tempNote[0]
-  return title
+  const tempNote = savedNote.split("\n")[0]
+  return tempNote
+}
+function displayFirstNote(){
+  const noteList = document.querySelector('.notes-list')
+  const li = document.createElement('li')
+  li.className = 'newNote'
+  li.appendChild(document.createTextNode(notes[0].title))
+  noteList.appendChild(li)
+  const firstNote = noteList.lastChild
+  firstNote.addEventListener('click', (evt) => {
+    const lastNoteTitle = evt.target.innerHTML
+    displayRead(lastNoteTitle)
+  })
 }
 
 function initPage(){
   openText.addEventListener('click', putNote)
   createCheck()
-  const noteList = document.querySelector('.notes-list')
-  const li = document.createElement('li')
-  li.className = 'newNote'
-  li.appendChild(document.createTextNode(notes[0].title))
-  const lastNote = noteList.appendChild(li).lastChild
-  lastNote.addEventListener('click', (evt) => {
-    const lastNoteTitle = evt.target.innerHTML
-    displayReadOnly(lastNoteTitle)
-  })
+  displayFirstNote()
 }
-
 function removeRead(){
   const readArea = document.querySelector('.read-note-area')
   readArea.innerHTML = ''
@@ -110,37 +113,37 @@ function removeRead(){
 
 function initRead(){
   const template =`
-  <button class="close">Close</button>
   <textarea readonly class = 'noteArea' rows="40" cols="80">Note</textarea>
+  <button class="close">x</button>
   `
   const readArea = document.querySelector('.read-note-area')
   readArea.innerHTML = ''
   readArea.insertAdjacentHTML('beforeend', template)
 }
 
-function displayRead(id){
+function displayRead(title){
   initRead()
   removeText()
   const cancelBtn = document.querySelector('.close')
   cancelBtn.addEventListener('click', removeRead)
   var displayedNote = ''
   for (i of notes){
-    if (id == i.title){
-      displayedNote = i.title + '\n' + i.noteBody
+    if (title == i.title){
+      TitleNote = i.title + '\n' + i.noteBody
     }
   }
   const noteArea = document.querySelector('.noteArea')
-  noteArea.innerHTML = displayedNote
+  noteArea.innerHTML = TitleNote
 }
 
-function lastNoteButton() {
+function clickableNote() {
   const noteList = document.querySelector('.notes-list').lastChild
   noteList.addEventListener('click', (evt) => {
     const lastNoteTitle = evt.target.innerHTML
     displayRead(lastNoteTitle)
   })
 }
-function darkmode(){
+function LDmode(){
   const dark = document.querySelector(".main-container")
   if (check == false){
     dark.classList.replace('light-theme', 'dark-theme')
@@ -151,9 +154,8 @@ function darkmode(){
   }
 }
 function createCheck(){
-  var checkBox = document.querySelector('.theme-toggle')
-  checkBox.addEventListener('click', darkmode)
+  var clickBox = document.querySelector('.theme-toggle')
+  clickBox.addEventListener('click', LDmode)
 }
 
-openText.addEventListener('click', putNote)
 initPage()
