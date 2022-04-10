@@ -1,4 +1,4 @@
-openText = document.querySelector('.icons')
+const openText = document.querySelector('.icons')
 
 const notes = [
   { 
@@ -7,21 +7,10 @@ const notes = [
     id: 1 
   }
 ]
-function removeText(template){
+function removeText(){
   const revert = document.querySelector('.write-note-area')
   revert.innerHTML = ''
-  revert.insertAdjacentHTML('afterbegin', template)
-}
-
-function blank(y){
-  const template = ``
-  return template
-}
-
-function delNote(){
-  const empty = getNote()
-  const newTemplate = blank(empty)
-  removeText(newTemplate)
+  revert.insertAdjacentHTML('afterbegin', '')
 }
 
 function newNote(noteBody){
@@ -50,14 +39,14 @@ function getNote (){
   return note
 }
 
-function assembleNote (){
+function putNote (){
   const noteText = getNote()
   const note = newNote(noteText)
   displayNote(note)
   savBtn = document.querySelector('.Save')
   delBtn = document.querySelector('.Delete')
   savBtn.addEventListener('click', savedNote)
-  delBtn.addEventListener('click', delNote)
+  delBtn.addEventListener('click', removeText)
 }
 
 function addtoArray(){
@@ -71,14 +60,15 @@ function addtoArray(){
 function addtitletoNotes(){
   const selectNav = document.querySelector('.notes-list')
   selectNav.innerHTML = ''
-  selectNav.insertAdjacentHTML('afterbegin', getTitle())
+  const li = document.createElement("li")
+  li.appendChild(document.createTextNode(getTitle()))
+  selectNav.appendChild(li)
 }
 function savedNote(){
-    addtitletoNotes()
-    addtoArray()
-    delNote()
+  addtitletoNotes()
+  addtoArray()
+  delNote()
 }
-
 
 function checkNote(){
   const text = document.getElementById("noteArea")
@@ -87,7 +77,7 @@ function checkNote(){
 }
 
 function getTitle(){
-  const savedNote = checkNote()
+  const savedNote = getNote()
   const tempNote = savedNote.split("\n")
   const title = tempNote[0]
   return title
@@ -99,6 +89,16 @@ function initPage(){
   selectNav.innerHTML = ''
   selectNav.insertAdjacentHTML('beforebegin', item.title[0]) 
 }
-openText.addEventListener('click', assembleNote)
+
+function initRead(){
+  const template =`
+  <button class="close">Close</button>
+  <textarea readonly class = 'noteArea' rows="40" cols="80">Note</textarea>
+  `
+  const readArea = document.querySelector('.read-note-area')
+  readArea.innerHTML = ''
+  readArea.insertAdjacentHTML('beforeend', template)
+}
+
+openText.addEventListener('click', putNote)
 notes.map(item => item.title)
-initPage
