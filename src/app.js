@@ -1,5 +1,7 @@
 const openText = document.querySelector('.icons')
 
+var check = false
+
 const notes = [
   { 
     title: "first note", 
@@ -13,15 +15,11 @@ function removeText(){
   revert.insertAdjacentHTML('afterbegin', '')
 }
 
-function newNote(noteBody){
-  const template = `
+const template = `
     <textarea id = 'noteArea' rows="40" cols="80">Note</textarea>
     <button class="Save">Save</button>
     <button class="Delete">Delete</button>
   `
-  return template
-}
-
 function addtoNav(){
   const whatever = document.querySelector(".side-note-menu")
   whatever.innerHTML = ''
@@ -31,31 +29,24 @@ function addtoNav(){
 function displayNote(note) {
   const noteDisplayArea = document.querySelector('.write-note-area')
   noteDisplayArea.innerHTML = ''
-  noteDisplayArea.insertAdjacentHTML('afterbegin', note)
+  noteDisplayArea.insertAdjacentHTML('beforeend', note)
 }
+
 function getNote (){
-  const textArea = document.querySelector('.icons')
-  const note = textArea.value
-  return note
+  const text = document.getElementById("noteArea")
+  const noteBody = text.value
+  return noteBody
 }
 
 function putNote (){
-  const noteText = getNote()
-  const note = newNote(noteText)
-  displayNote(note)
+  removeRead()
+  displayNote(template)
   savBtn = document.querySelector('.Save')
   delBtn = document.querySelector('.Delete')
   savBtn.addEventListener('click', savedNote)
   delBtn.addEventListener('click', removeText)
 }
 
-function addtoArray(){
-  notes.push({
-    title: getTitle(),
-    noteBody: checkNote(),
-    id: notes.length + 1
-  }) 
-}
 
 function addtitletoNotes(){
   const selectNav = document.querySelector('.notes-list')
@@ -65,7 +56,7 @@ function addtitletoNotes(){
   selectNav.appendChild(li)
 }
 
-function addToNotes(){
+function addtoArray(){
   const textSplit = getNote().split('\n')
   const index = 0
   var noteShow = ""
@@ -86,13 +77,8 @@ function addToNotes(){
 function savedNote(){
   addtitletoNotes()
   addtoArray()
-  delNote()
-}
-
-function checkNote(){
-  const text = document.getElementById("noteArea")
-  const noteBody = text.value
-  return noteBody
+  removeText()
+  lastNoteButton()
 }
 
 function getTitle(){
@@ -103,10 +89,17 @@ function getTitle(){
 }
 
 function initPage(){
-  notes.map(item => item.title)
-  const selectNav = document.querySelector('.notes-list')
-  selectNav.innerHTML = ''
-  selectNav.insertAdjacentHTML('beforebegin', item.title[0]) 
+  openText.addEventListener('click', putNote)
+  createCheck()
+  const noteList = document.querySelector('.notes-list')
+  const li = document.createElement('li')
+  li.className = 'newNote'
+  li.appendChild(document.createTextNode(notes[0].title))
+  const lastNote = noteList.appendChild(li).lastChild
+  lastNote.addEventListener('click', (evt) => {
+    const lastNoteTitle = evt.target.innerHTML
+    displayReadOnly(lastNoteTitle)
+  })
 }
 
 function removeRead(){
@@ -144,8 +137,23 @@ function lastNoteButton() {
   const noteList = document.querySelector('.notes-list').lastChild
   noteList.addEventListener('click', (evt) => {
     const lastNoteTitle = evt.target.innerHTML
-    displayReadOnly(lastNoteTitle)
+    displayRead(lastNoteTitle)
   })
+}
+function darkmode(){
+  const dark = document.querySelector(".main-container")
+  if (check == false){
+    dark.classList.replace('light-theme', 'dark-theme')
+    check = true
+  } else if (check == true){
+    dark.classList.replace('dark-theme', 'light-theme')
+    check = false
+  }
+}
+function createCheck(){
+  var checkBox = document.querySelector('.theme-toggle')
+  checkBox.addEventListener('click', darkmode)
 }
 
 openText.addEventListener('click', putNote)
+initPage()
