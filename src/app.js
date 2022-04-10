@@ -59,11 +59,30 @@ function addtoArray(){
 
 function addtitletoNotes(){
   const selectNav = document.querySelector('.notes-list')
-  selectNav.innerHTML = ''
   const li = document.createElement("li")
+  li.className = 'newNote'
   li.appendChild(document.createTextNode(getTitle()))
   selectNav.appendChild(li)
 }
+
+function addToNotes(){
+  const textSplit = getNote().split('\n')
+  const index = 0
+  var noteShow = ""
+  if (index > -1){
+    textSplit.splice(index, 1);
+  }
+  for (const x of textSplit){
+    noteShow += x;
+    noteShow += "\n";
+  }
+  notes.push({
+    title: getTitle(),
+    noteBody: noteShow,
+    id: notes.length + 1
+  }) 
+}
+
 function savedNote(){
   addtitletoNotes()
   addtoArray()
@@ -90,6 +109,12 @@ function initPage(){
   selectNav.insertAdjacentHTML('beforebegin', item.title[0]) 
 }
 
+function removeRead(){
+  const readArea = document.querySelector('.read-note-area')
+  readArea.innerHTML = ''
+  readArea.insertAdjacentHTML('afterbegin', '')
+}
+
 function initRead(){
   const template =`
   <button class="close">Close</button>
@@ -100,5 +125,27 @@ function initRead(){
   readArea.insertAdjacentHTML('beforeend', template)
 }
 
+function displayRead(id){
+  initRead()
+  removeText()
+  const cancelBtn = document.querySelector('.close')
+  cancelBtn.addEventListener('click', removeRead)
+  var displayedNote = ''
+  for (i of notes){
+    if (id == i.title){
+      displayedNote = i.title + '\n' + i.noteBody
+    }
+  }
+  const noteArea = document.querySelector('.noteArea')
+  noteArea.innerHTML = displayedNote
+}
+
+function lastNoteButton() {
+  const noteList = document.querySelector('.notes-list').lastChild
+  noteList.addEventListener('click', (evt) => {
+    const lastNoteTitle = evt.target.innerHTML
+    displayReadOnly(lastNoteTitle)
+  })
+}
+
 openText.addEventListener('click', putNote)
-notes.map(item => item.title)
