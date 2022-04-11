@@ -126,7 +126,6 @@ function displayRead(title){
   removeText()
   const cancelBtn = document.querySelector('.close')
   cancelBtn.addEventListener('click', removeRead)
-  var displayedNote = ''
   for (i of notes){
     if (title == i.title){
       TitleNote = i.title + '\n' + i.noteBody
@@ -143,6 +142,7 @@ function clickableNote() {
     displayRead(lastNoteTitle)
   })
 }
+
 function LDmode(){
   const dark = document.querySelector(".main-container")
   if (check == false){
